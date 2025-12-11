@@ -60,8 +60,8 @@ function App() {
         backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0,0,0,0.1)' 
       }}>
         
-        {/* メインエリア */}
-        <div style={{ flex: 1, overflowY: 'auto', backgroundColor: '#fdfdfdff' }}>
+        {/* メインエリア：★ここが重要（overflowX: 'hidden' を追加） */}
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', backgroundColor: '#fff' }}>
           {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
           {page === 'input' && <ShiftInput currentUser={currentUser} />}
           {page === 'reservation' && <ReservationList currentUser={currentUser} />}
