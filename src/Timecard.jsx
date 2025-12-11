@@ -13,9 +13,9 @@ function Timecard({ currentUser }) {
   const [isEarly, setIsEarly] = useState(false); 
 
   // ★設定（位置情報を合わせてください）
-  const SHOP_LAT = 34.266108; 
-  const SHOP_LNG = 135.151767;
-  const ALLOWED_RADIUS_METERS = 300; 
+  const SHOP_LAT = 34.233533294388565; 
+  const SHOP_LNG = 135.18674509554475;
+  const ALLOWED_RADIUS_METERS = 20; 
   const ALLOWED_EARLY_MINUTES = 15;
 
   const getTodayDateKey = () => {

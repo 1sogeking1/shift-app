@@ -7,7 +7,8 @@ import ManagerView from './ManagerView';
 import ReservationList from './ReservationList';
 import Profile from './Profile';
 import UserList from './UserList';
-import Timecard from './Timecard'; // 読み込み
+import SalaryList from './SalaryList'; // ★追加
+import Timecard from './Timecard';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -55,21 +56,19 @@ function App() {
     <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#eef2f5' }}>
       <div className="app-container" style={{ width: '100%', maxWidth: '500px', height: '100%', maxHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0,0,0,0.1)' }}>
         
-        {/* メインエリア */}
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', backgroundColor: '#fff' }}>
           {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
           {page === 'input' && <ShiftInput currentUser={currentUser} />}
           {page === 'reservation' && <ReservationList currentUser={currentUser} />}
-          {page === 'timecard' && <Timecard currentUser={currentUser} />} {/* ★追加 */}
+          {page === 'timecard' && <Timecard currentUser={currentUser} />}
           {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} />}
           
           {page === 'manager' && <ManagerView />}
           {page === 'userlist' && <UserList />}
+          {page === 'salary' && <SalaryList />} {/* ★給与画面 */}
         </div>
 
-        {/* ★ボトムナビゲーション（5つボタン） */}
         <div style={{ height: '60px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#fff', zIndex: 50, flexShrink: 0 }}>
-          
           <NavButton active={page === 'home'} onClick={() => setPage('home')} icon="🏠" label="ホーム" />
           
           {currentUser.isAdmin ? (
@@ -84,13 +83,10 @@ function App() {
             </>
           )}
 
-          {/* ★打刻ボタン（共通） */}
           <NavButton active={page === 'timecard'} onClick={() => setPage('timecard')} icon="⏱️" label="打刻" />
-          
           <NavButton active={page === 'profile'} onClick={() => setPage('profile')} icon="👤" label="設定" />
         </div>
 
-        {/* サイドメニュー */}
         {isMenuOpen && <div onClick={() => setIsMenuOpen(false)} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 99 }} />}
         <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '250px', backgroundColor: 'white', zIndex: 100, boxShadow: '2px 0 10px rgba(0,0,0,0.2)', transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.3s ease', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '20px', backgroundColor: currentUser.isAdmin ? '#333' : '#ffa500', color: 'white' }}>
@@ -98,9 +94,16 @@ function App() {
             <div style={{ fontSize: '12px', marginTop: '5px' }}>{currentUser.name} さん</div>
           </div>
           <div style={{ flex: 1, overflowY: 'auto' }}>
+            
+            {/* 店長メニュー */}
             {currentUser.isAdmin && (
-              <MenuItem onClick={() => { setPage('userlist'); setIsMenuOpen(false); }} label="👥 スタッフ管理" />
+              <>
+                <MenuItem onClick={() => { setPage('userlist'); setIsMenuOpen(false); }} label="👥 スタッフ管理 (時給)" />
+                {/* ★ここに追加 */}
+                <MenuItem onClick={() => { setPage('salary'); setIsMenuOpen(false); }} label="💰 給与計算・実績" />
+              </>
             )}
+
             <hr style={{ margin: '10px 0', border: 'none', borderTop: '1px solid #eee' }} />
             <MenuItem onClick={() => handleMenuClick('help')} label="❓ ヘルプ" />
             <MenuItem onClick={() => handleMenuClick('terms')} label="📜 利用規約" />
@@ -111,7 +114,6 @@ function App() {
   );
 }
 
-// 幅を20%に変更（5つ並ぶため）
 function NavButton({ active, onClick, icon, label, color }) {
   const activeColor = color || '#ffa500';
   const textColor = active ? activeColor : '#aaa';
