@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
+// Timecardのimportを削除
 
 function HomeCalendar({ currentUser, onMenuClick }) {
   const [confirmedShifts, setConfirmedShifts] = useState({});
@@ -8,7 +9,6 @@ function HomeCalendar({ currentUser, onMenuClick }) {
   const [viewMonth, setViewMonth] = useState(new Date().getMonth() + 1);
   const [selectedDate, setSelectedDate] = useState(null);
   
-  // ★給与計算用のステート
   const [hourlyWage, setHourlyWage] = useState(0);
   const [monthlySalary, setMonthlySalary] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
@@ -17,7 +17,6 @@ function HomeCalendar({ currentUser, onMenuClick }) {
   const weekTextColors = ["#ff4d4f", "#333", "#333", "#333", "#333", "#333", "#1890ff"];
   const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-  // 1. シフトデータの取得
   useEffect(() => {
     const fetchShifts = async () => {
       const querySnapshot = await getDocs(collection(db, "shifts"));
@@ -43,7 +42,6 @@ function HomeCalendar({ currentUser, onMenuClick }) {
     fetchShifts();
   }, []);
 
-  // 2. ★時給データの取得
   useEffect(() => {
     const fetchWage = async () => {
       if (currentUser?.id) {
@@ -52,9 +50,7 @@ function HomeCalendar({ currentUser, onMenuClick }) {
           if (userDoc.exists()) {
             setHourlyWage(userDoc.data().hourlyWage || 0);
           }
-        } catch (e) {
-          console.error("時給取得エラー", e);
-        }
+        } catch (e) { console.error(e); }
       }
     };
     fetchWage();
@@ -68,7 +64,6 @@ function HomeCalendar({ currentUser, onMenuClick }) {
     setViewMonth(newMonth); setViewYear(newYear); setSelectedDate(null);
   };
 
-  // カレンダー生成
   const generateDays = () => {
     const days = [];
     const firstDate = new Date(viewYear, viewMonth - 1, 1);
@@ -82,45 +77,30 @@ function HomeCalendar({ currentUser, onMenuClick }) {
   };
   const calendarDays = generateDays();
 
-  // 3. ★給与計算ロジック（カレンダーが更新されるたびに再計算）
   useEffect(() => {
     if (hourlyWage === 0) return;
-
     let hoursSum = 0;
-
     calendarDays.forEach(day => {
       if (day.type === 'day') {
-        // その日のシフトの中に「自分」がいるか探す
         const myShift = day.shifts.find(s => s.name === currentUser.name);
         if (myShift) {
-          // 時間計算 (例: 10:00 -> 10.0, 10:30 -> 10.5)
           const parseTime = (t) => {
             const [h, m] = t.split(':').map(Number);
             return h + (m / 60);
           };
-
           let start = parseTime(myShift.start);
           let end = parseTime(myShift.end);
-
-          // 深夜対応（終了が開始より小さい場合、例: 22:00〜02:00 なら 26:00扱いにする）
-          if (end < start) {
-            end += 24;
-          }
-
+          if (end < start) end += 24;
           hoursSum += (end - start);
         }
       }
     });
-
     setTotalHours(hoursSum);
     setMonthlySalary(Math.floor(hoursSum * hourlyWage));
-
-  }, [confirmedShifts, hourlyWage, viewMonth, viewYear]); // 依存配列に注意
+  }, [confirmedShifts, hourlyWage, viewMonth, viewYear]);
 
   return (
     <div style={{ padding: '20px', width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      
-      {/* ヘッダー */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '20px', position: 'relative' }}>
         <button onClick={onMenuClick} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#555', fontSize: '24px', cursor: 'pointer', padding: 0 }}>≡</button>
         <button onClick={() => changeMonth(-1)} style={navButtonStyle}>＜</button>
@@ -128,78 +108,38 @@ function HomeCalendar({ currentUser, onMenuClick }) {
         <button onClick={() => changeMonth(1)} style={navButtonStyle}>＞</button>
       </div>
 
-      {/* ★給与表示カード */}
-      <div style={{ 
-        backgroundColor: '#fff', 
-        borderRadius: '12px', 
-        padding: '15px 20px', 
-        marginBottom: '20px', 
-        boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-        border: '1px solid #eee',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f9faff 100%)'
-      }}>
+      <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '15px 20px', marginBottom: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', border: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(135deg, #ffffff 0%, #f9faff 100%)' }}>
         <div>
           <div style={{ fontSize: '12px', color: '#888', fontWeight: 'bold', marginBottom:'4px' }}>今月の見込み給与</div>
-          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }}>
-            ¥ {monthlySalary.toLocaleString()}
-          </div>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }}>¥ {monthlySalary.toLocaleString()}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '12px', color: '#888' }}>稼働時間</div>
-          <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#007bff' }}>
-            {totalHours} h
-          </div>
+          <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#007bff' }}>{totalHours} h</div>
           <div style={{ fontSize: '10px', color: '#aaa' }}>時給: ¥{hourlyWage}</div>
         </div>
       </div>
 
-      {/* カレンダー本体 */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #eee', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.03)' }}>
-        {weekDays.map((day, i) => (
-          <div key={i} style={{ padding: '12px 0', textAlign: 'center', fontSize: '11px', fontWeight: 'bold', color: '#aaa', borderBottom: '1px solid #eee' }}>{day}</div>
-        ))}
-
+        {weekDays.map((day, i) => <div key={i} style={{ padding: '12px 0', textAlign: 'center', fontSize: '11px', fontWeight: 'bold', color: '#aaa', borderBottom: '1px solid #eee' }}>{day}</div>)}
         {calendarDays.map((cell) => {
           if (cell.type === 'empty') return <div key={cell.key} style={{ background: '#fcfcfc', borderBottom: '1px solid #eee' }} />;
-          
           const isSelected = selectedDate === cell.key;
           const dayOfWeek = new Date(viewYear, viewMonth - 1, cell.date).getDay();
-          
           const myShift = cell.shifts.find(s => s.name === currentUser.name);
           const otherShiftCount = cell.shifts.length;
-
           return (
-            <div 
-              key={cell.key} onClick={() => setSelectedDate(cell.key)}
-              style={{ 
-                minHeight: '80px', padding: '6px', borderBottom: '1px solid #eee', borderRight: '1px solid #eee',
-                cursor: 'pointer', backgroundColor: isSelected ? '#e6f7ff' : weekColors[dayOfWeek], position: 'relative', transition: 'background 0.2s'
-              }}
-            >
+            <div key={cell.key} onClick={() => setSelectedDate(cell.key)} style={{ minHeight: '80px', padding: '6px', borderBottom: '1px solid #eee', borderRight: '1px solid #eee', cursor: 'pointer', backgroundColor: isSelected ? '#e6f7ff' : weekColors[dayOfWeek], position: 'relative', transition: 'background 0.2s' }}>
               <div style={{ fontWeight: 'bold', fontSize: '14px', color: weekTextColors[dayOfWeek], marginBottom:'6px' }}>{cell.date}</div>
-              
               <div style={{ display:'flex', flexDirection:'column', gap:'2px' }}>
-                {myShift && (
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'center', background:'#fff7e6', padding:'2px', borderRadius:'4px', border:'1px solid #ffd591' }}>
-                    <span style={{ fontSize: '10px', color:'#d46b08', fontWeight:'bold' }}>★ 出勤</span>
-                  </div>
-                )}
-                {!myShift && otherShiftCount > 0 && (
-                   <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'4px' }}>
-                    <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#1890ff' }}></span>
-                    <span style={{ fontSize: '10px', color:'#888' }}>{otherShiftCount}名</span>
-                  </div>
-                )}
+                {myShift && <div style={{ display:'flex', alignItems:'center', justifyContent:'center', background:'#fff7e6', padding:'2px', borderRadius:'4px', border:'1px solid #ffd591' }}><span style={{ fontSize: '10px', color:'#d46b08', fontWeight:'bold' }}>★ 出勤</span></div>}
+                {!myShift && otherShiftCount > 0 && <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'4px' }}><span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#1890ff' }}></span><span style={{ fontSize: '10px', color:'#888' }}>{otherShiftCount}名</span></div>}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* 詳細エリア */}
       <div style={{ marginTop: '20px' }}>
         {selectedDate ? (
           <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '15px', border: '1px solid #eee', boxShadow: '0 2px 5px rgba(0,0,0,0.03)' }}>
@@ -209,24 +149,16 @@ function HomeCalendar({ currentUser, onMenuClick }) {
                 {confirmedShifts[selectedDate].map((shift, i) => {
                   const isMe = shift.name === currentUser.name;
                   return (
-                    <div key={i} style={{ 
-                      backgroundColor: isMe ? '#fff7e6' : '#f9f9f9', 
-                      border: isMe ? '1px solid #ffd591' : '1px solid #eee',
-                      padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' 
-                    }}>
+                    <div key={i} style={{ backgroundColor: isMe ? '#fff7e6' : '#f9f9f9', border: isMe ? '1px solid #ffd591' : '1px solid #eee', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontWeight: 'bold', color: '#333' }}>{shift.name} {isMe && "(自分)"}</span>
                       <span style={{ color: isMe ? '#d46b08' : '#1890ff', fontWeight: 'bold', fontSize: '14px', background: isMe ? '#fff' : '#e6f7ff', padding:'2px 8px', borderRadius:'4px' }}>{shift.start} 〜 {shift.end}</span>
                     </div>
                   );
                 })}
               </div>
-            ) : (
-              <p style={{ color: '#999', textAlign: 'center', fontSize: '14px' }}>シフトはありません</p>
-            )}
+            ) : <p style={{ color: '#999', textAlign: 'center', fontSize: '14px' }}>シフトはありません</p>}
           </div>
-        ) : (
-          <p style={{ color: '#ccc', textAlign: 'center', marginTop: '40px', fontSize: '14px' }}>日付をタップして詳細を確認</p>
-        )}
+        ) : <p style={{ color: '#ccc', textAlign: 'center', marginTop: '40px', fontSize: '14px' }}>日付をタップして詳細を確認</p>}
       </div>
     </div>
   );
