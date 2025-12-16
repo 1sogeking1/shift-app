@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffa500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 背景（余白付き） -->
+  <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+
+  <!-- J の文字（中央に大きく配置） -->
+  <text x="512" y="680" font-family="'Arial Black', 'Helvetica', 'Arial', sans-serif" font-size="600" font-weight="900" fill="white" text-anchor="middle" dominant-baseline="middle" style="paint-order: stroke; stroke: rgba(255,140,0,0.3); stroke-width: 8px;">J</text>
+
+  <!-- 時計の円（スケジュール） -->
+  <g transform="translate(750, 280)" opacity="0.9">
+    <circle cx="0" cy="0" r="80" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="10"/>
+    <line x1="0" y1="0" x2="0" y2="-45" stroke="white" stroke-width="10" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="32" y2="0" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="10" fill="white"/>
+  </g>
+
+  <!-- エネルギーの波（ジュール熱量） -->
+  <g opacity="0.35">
+    <path d="M 180 800 Q 230 760, 280 800 T 380 800 T 480 800" fill="none" stroke="white" stroke-width="14" stroke-linecap="round"/>
+    <path d="M 200 860 Q 250 820, 300 860 T 400 860 T 500 860" fill="none" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>

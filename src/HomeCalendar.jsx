@@ -123,12 +123,36 @@ function HomeCalendar({ currentUser, onMenuClick }) {
   }, [confirmedShifts, hourlyWage, viewMonth, viewYear]);
 
   return (
-    <div style={{ padding: '20px 16px', width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      {/* ヘッダー with ロゴ */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: '12px' }}>
-        <button onClick={onMenuClick} style={{ background: 'none', border: 'none', color: '#555', fontSize: '28px', cursor: 'pointer', padding: '4px' }}>≡</button>
-        <img src="/logo.svg" alt="J" style={{ height: '32px', marginRight: 'auto' }} />
+    <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      {/* ヘッダー with ロゴ（セーフエリア対応） */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '16px 20px 12px 20px',
+        gap: '16px',
+        background: 'linear-gradient(135deg, #fff 0%, #fafafa 100%)',
+        borderBottom: '1px solid #eee',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10
+      }}>
+        <button onClick={onMenuClick} style={{
+          background: 'none',
+          border: 'none',
+          color: '#555',
+          fontSize: '32px',
+          cursor: 'pointer',
+          padding: '8px',
+          minWidth: '48px',
+          minHeight: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>≡</button>
+        <img src="/logo.svg" alt="J" style={{ height: '36px', marginRight: 'auto' }} />
       </div>
+
+      <div style={{ padding: '20px 16px' }}>
 
       {/* 年月切り替え */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '20px' }}>
@@ -209,6 +233,7 @@ function HomeCalendar({ currentUser, onMenuClick }) {
             </div>
           </div>
         ) : <p style={{ color: '#ccc', textAlign: 'center', marginTop: '40px', fontSize: '14px' }}>日付をタップして詳細を確認</p>}
+      </div>
       </div>
     </div>
   );
