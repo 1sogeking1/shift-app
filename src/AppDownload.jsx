@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 function AppDownload({ onBack }) {
   const [appUrl, setAppUrl] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [canInstall, setCanInstall] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
     // 現在のURLを取得（デプロイ後は実際のURLになります）
@@ -12,7 +14,34 @@ function AppDownload({ onBack }) {
     // QRコードを生成（Google Charts APIを使用）
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
     setQrCodeUrl(qrUrl);
+
+    // PWAインストール可能かチェック
+    const handleInstallAvailable = () => {
+      setCanInstall(true);
+    };
+    window.addEventListener('pwa-install-available', handleInstallAvailable);
+
+    // すでにインストール済みかチェック
+    const checkStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                            window.navigator.standalone ||
+                            document.referrer.includes('android-app://');
+    setIsStandalone(checkStandalone);
+
+    return () => {
+      window.removeEventListener('pwa-install-available', handleInstallAvailable);
+    };
   }, []);
+
+  const handleInstall = async () => {
+    if (window.installPWA) {
+      const accepted = await window.installPWA();
+      if (accepted) {
+        alert('アプリのインストールが完了しました！');
+        setCanInstall(false);
+        setIsStandalone(true);
+      }
+    }
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(appUrl).then(() => {
@@ -40,6 +69,46 @@ function AppDownload({ onBack }) {
         <h2 style={{ flex: 1, textAlign: 'center', color: '#333', fontSize: '20px', margin: '0', fontWeight: 'bold' }}>アプリをダウンロード</h2>
         <div style={{ width: '24px' }}></div>
       </div>
+
+      {/* インストール済み表示 */}
+      {isStandalone && (
+        <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f6ffed', borderRadius: '8px', border: '1px solid #b7eb8f' }}>
+          <p style={{ fontSize: '14px', color: '#52c41a', margin: 0, fontWeight: 'bold' }}>
+            ✅ アプリはすでにインストール済みです
+          </p>
+        </div>
+      )}
+
+      {/* PWAインストールボタン */}
+      {!isStandalone && canInstall && (
+        <div style={{ marginBottom: '20px' }}>
+          <button
+            onClick={handleInstall}
+            style={{
+              width: '100%',
+              padding: '16px',
+              backgroundColor: 'var(--primary-color)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(255, 165, 0, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px'
+            }}
+          >
+            <span style={{ fontSize: '24px' }}>📱</span>
+            アプリをインストール
+          </button>
+          <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+            ワンタップでホーム画面にインストールできます
+          </p>
+        </div>
+      )}
 
       <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#e6f7ff', borderRadius: '8px', border: '1px solid #91d5ff' }}>
         <p style={{ fontSize: '14px', color: '#0050b3', margin: 0 }}>

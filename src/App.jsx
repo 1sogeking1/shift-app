@@ -58,10 +58,8 @@ function App() {
   }
 
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#eef2f5' }}>
-      <div className="app-container" style={{ width: '100%', maxWidth: '500px', height: '100%', maxHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0,0,0,0.1)' }}>
-        
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', backgroundColor: '#fff' }}>
+    <div className="app-container">
+        <div className="app-content">
           {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
           {page === 'input' && <ShiftInput currentUser={currentUser} />}
           {page === 'reservation' && <ReservationList currentUser={currentUser} />}
@@ -78,12 +76,12 @@ function App() {
           {page === 'appdownload' && <AppDownload onBack={() => setPage('profile')} />}
         </div>
 
-        <div style={{ height: '60px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#fff', zIndex: 50, flexShrink: 0 }}>
+        <div className="bottom-nav">
           <NavButton active={page === 'home'} onClick={() => setPage('home')} icon="🏠" label="ホーム" />
-          
+
           {currentUser.isAdmin ? (
             <>
-              <NavButton active={page === 'manager'} onClick={() => setPage('manager')} icon="📝" label="承認" color="#d9534f" />
+              <NavButton active={page === 'manager'} onClick={() => setPage('manager')} icon="📝" label="承認" color="var(--danger-color)" />
               <NavButton active={page === 'reservation'} onClick={() => setPage('reservation')} icon="📖" label="予約" />
             </>
           ) : (
@@ -97,14 +95,13 @@ function App() {
           <NavButton active={page === 'profile'} onClick={() => setPage('profile')} icon="👤" label="設定" />
         </div>
 
-        {isMenuOpen && <div onClick={() => setIsMenuOpen(false)} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 99 }} />}
-        <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '250px', backgroundColor: 'white', zIndex: 100, boxShadow: '2px 0 10px rgba(0,0,0,0.2)', transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.3s ease', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '20px', backgroundColor: currentUser.isAdmin ? '#333' : '#ffa500', color: 'white' }}>
+        {isMenuOpen && <div className="side-menu-overlay" onClick={() => setIsMenuOpen(false)} />}
+        <div className={`side-menu ${isMenuOpen ? 'open' : ''}`}>
+          <div className="side-menu-header">
             <div style={{ fontSize: '18px', fontWeight: 'bold' }}>メニュー</div>
-            <div style={{ fontSize: '12px', marginTop: '5px' }}>{currentUser.name} さん</div>
+            <div style={{ fontSize: '12px', marginTop: '5px', opacity: 0.9 }}>{currentUser.name} さん</div>
           </div>
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            
+          <div className="side-menu-content">
             {/* 店長メニュー */}
             {currentUser.isAdmin && (
               <>
@@ -114,30 +111,29 @@ function App() {
               </>
             )}
 
-            <hr style={{ margin: '10px 0', border: 'none', borderTop: '1px solid #eee' }} />
+            <hr className="menu-divider" />
             <MenuItem onClick={() => handleMenuClick('help')} label="❓ ヘルプ" />
             <MenuItem onClick={() => handleMenuClick('terms')} label="📜 利用規約" />
             <MenuItem onClick={() => handleMenuClick('privacy')} label="🔒 プライバシーポリシー" />
           </div>
         </div>
-      </div>
     </div>
   );
 }
 
 function NavButton({ active, onClick, icon, label, color }) {
-  const activeColor = color || '#ffa500';
-  const textColor = active ? activeColor : '#aaa';
+  const activeColor = color || 'var(--primary-color)';
+  const textColor = active ? activeColor : 'var(--text-tertiary)';
   return (
-    <button onClick={onClick} style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: textColor, width: '20%', height: '100%', cursor: 'pointer', padding: '5px 0' }}>
-      <span style={{ fontSize: '20px', marginBottom: '2px' }}>{icon}</span>
-      <span style={{ fontSize: '9px', fontWeight: active ? 'bold' : 'normal', whiteSpace: 'nowrap' }}>{label}</span>
+    <button onClick={onClick} className={`nav-button ${active ? 'active' : ''}`} style={{ color: textColor }}>
+      <span className="nav-button-icon">{icon}</span>
+      <span className="nav-button-label">{label}</span>
     </button>
   );
 }
 
 function MenuItem({ onClick, label }) {
-  return <div onClick={onClick} style={{ padding: '15px 20px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer', color: '#333', fontSize: '15px' }}>{label}</div>;
+  return <div onClick={onClick} className="menu-item">{label}</div>;
 }
 
 export default App;
