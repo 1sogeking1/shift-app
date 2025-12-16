@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebase";
+import AppHeader from './AppHeader';
 
-function Timecard({ currentUser }) {
+function Timecard({ currentUser, onMenuClick }) {
   const [status, setStatus] = useState("loading");
   const [docId, setDocId] = useState(null);
   const [startTime, setStartTime] = useState("");
@@ -220,8 +221,10 @@ function Timecard({ currentUser }) {
   if (status === "loading") return null;
 
   return (
-    <div style={{ padding: '20px 10px', maxWidth: '1000px', margin: '0 auto', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center', color: '#333', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold' }}>⏱️ タイムカード</h2>
+    <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      <AppHeader onMenuClick={onMenuClick} pageName="打刻" />
+
+      <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 
       <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '30px 20px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', border: '1px solid #eee', textAlign: 'center' }}>
         
@@ -270,6 +273,7 @@ function Timecard({ currentUser }) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

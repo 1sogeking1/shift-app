@@ -77,10 +77,10 @@ function App() {
     <div className="app-container">
         <div className="app-content">
           {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
-          {page === 'input' && <ShiftInput currentUser={currentUser} />}
-          {page === 'reservation' && <ReservationList currentUser={currentUser} />}
-          {page === 'timecard' && <Timecard currentUser={currentUser} />}
-          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={navigateTo} />}
+          {page === 'input' && <ShiftInput currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
+          {page === 'reservation' && <ReservationList currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
+          {page === 'timecard' && <Timecard currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
+          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={navigateTo} onMenuClick={() => setIsMenuOpen(true)} />}
 
           {page === 'manager' && <ManagerView />}
           {page === 'userlist' && <UserList />}

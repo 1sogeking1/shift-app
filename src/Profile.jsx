@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import AppHeader from './AppHeader';
 
-function Profile({ currentUser, onLogout, onPageChange }) {
+function Profile({ currentUser, onLogout, onPageChange, onMenuClick }) {
   const [wage, setWage] = useState("---");
 
   // 自分の時給を表示する（編集は不可）
@@ -24,8 +25,10 @@ function Profile({ currentUser, onLogout, onPageChange }) {
   };
 
   return (
-    <div style={{ padding: '20px 10px', maxWidth: '1000px', margin: '0 auto', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center', color: '#333', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold' }}>プロフィール</h2>
+    <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      <AppHeader onMenuClick={onMenuClick} pageName="設定" />
+
+      <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 
       <div style={{ 
         backgroundColor: '#fff', padding: '30px 20px', borderRadius: '12px', 
@@ -75,6 +78,7 @@ function Profile({ currentUser, onLogout, onPageChange }) {
         <button onClick={onLogout} style={{ width: '100%', padding: '16px', backgroundColor: '#ff4d4f', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', fontSize: '16px', boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)', cursor: 'pointer' }}>
           ログアウト
         </button>
+      </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import AppHeader from './AppHeader';
 // Timecardのimportを削除
 
 function HomeCalendar({ currentUser, onMenuClick }) {
@@ -124,35 +125,9 @@ function HomeCalendar({ currentUser, onMenuClick }) {
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      {/* ヘッダー with ロゴ（セーフエリア対応） */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '16px 20px 12px 20px',
-        gap: '16px',
-        background: 'linear-gradient(135deg, #fff 0%, #fafafa 100%)',
-        borderBottom: '1px solid #eee',
-        position: 'sticky',
-        top: 0,
-        zIndex: 10
-      }}>
-        <button onClick={onMenuClick} style={{
-          background: 'none',
-          border: 'none',
-          color: '#555',
-          fontSize: '32px',
-          cursor: 'pointer',
-          padding: '8px',
-          minWidth: '48px',
-          minHeight: '48px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>≡</button>
-        <img src="/logo.svg" alt="J" style={{ height: '36px', marginRight: 'auto' }} />
-      </div>
+      <AppHeader onMenuClick={onMenuClick} pageName="ホーム" />
 
-      <div style={{ padding: '20px 16px' }}>
+      <div style={{ padding: '20px 16px', paddingTop: '90px' }}>
 
       {/* 年月切り替え */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '20px' }}>

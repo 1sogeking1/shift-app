@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { collection, addDoc, query, where, getDocs, doc, setDoc } from "firebase/firestore"; 
+import { collection, addDoc, query, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import AppHeader from './AppHeader';
 
-function ShiftInput({ currentUser }) {
+function ShiftInput({ currentUser, onMenuClick }) {
   const [shiftRequests, setShiftRequests] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,14 +105,18 @@ function ShiftInput({ currentUser }) {
   };
 
   return (
-    <div style={{ padding: '20px 10px', maxWidth: '1000px', margin: '0 auto', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      
-      {/* ヘッダー */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#333', fontSize: '18px', fontWeight:'bold', margin: '0 0 5px 0' }}>シフト希望提出</h2>
-        <div style={{ fontSize: '13px', color: '#666' }}>
-          {currentPeriod} <br/>
-          <span style={{ fontWeight:'bold', color:'#007bff' }}>{currentUser.name}</span> さんの希望
+    <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      <AppHeader onMenuClick={onMenuClick} pageName="申請" />
+
+      <div style={{ padding: '20px 16px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
+        {/* サブヘッダー */}
+        <div style={{ textAlign: 'center', marginBottom: '20px', padding: '12px', backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #eee' }}>
+          <div style={{ fontSize: '14px', color: '#666', marginBottom: '4px' }}>
+            {currentPeriod}
+          </div>
+          <div style={{ fontSize: '15px' }}>
+            <span style={{ fontWeight:'bold', color:'#ffa500' }}>{currentUser.name}</span> さんの希望
+          </div>
         </div>
       </div>
 

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { db } from "./firebase";
+import AppHeader from './AppHeader';
 
-function ReservationList({ currentUser }) {
+function ReservationList({ currentUser, onMenuClick }) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [reservations, setReservations] = useState([]);
   
@@ -62,8 +63,10 @@ function ReservationList({ currentUser }) {
 
   // ★統一されたコンテナスタイル
   return (
-    <div style={{ padding: '20px 10px', maxWidth: '1000px', margin: '0 auto', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center', color: '#333', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold' }}>📅 予約管理台帳</h2>
+    <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      <AppHeader onMenuClick={onMenuClick} pageName="予約" />
+
+      <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 
       {/* 日付選択 */}
       <div style={{ textAlign: 'center', marginBottom: '20px', backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '12px' }}>
@@ -153,6 +156,7 @@ function ReservationList({ currentUser }) {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );
