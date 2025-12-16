@@ -5,10 +5,11 @@ import { db } from "./firebase";
 
 function HomeCalendar({ currentUser, onMenuClick }) {
   const [confirmedShifts, setConfirmedShifts] = useState({});
+  const [reservations, setReservations] = useState({});
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth() + 1);
   const [selectedDate, setSelectedDate] = useState(null);
-  
+
   const [hourlyWage, setHourlyWage] = useState(0);
   const [monthlySalary, setMonthlySalary] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
@@ -40,6 +41,28 @@ function HomeCalendar({ currentUser, onMenuClick }) {
       setConfirmedShifts(map);
     };
     fetchShifts();
+  }, []);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const querySnapshot = await getDocs(collection(db, "reservations"));
+      const map = {};
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.date) {
+          const dateKey = data.date;
+          if (!map[dateKey]) map[dateKey] = [];
+          map[dateKey].push({
+            id: doc.id,
+            time: data.time || '',
+            name: data.name || '',
+            count: data.count || 0
+          });
+        }
+      });
+      setReservations(map);
+    };
+    fetchReservations();
   }, []);
 
   useEffect(() => {
@@ -142,21 +165,42 @@ function HomeCalendar({ currentUser, onMenuClick }) {
 
       <div style={{ marginTop: '20px' }}>
         {selectedDate ? (
-          <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '15px', border: '1px solid #eee', boxShadow: '0 2px 5px rgba(0,0,0,0.03)' }}>
-            <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', color: '#333', fontWeight:'bold', borderLeft: '4px solid #1890ff', paddingLeft: '10px' }}>{selectedDate} の出勤メンバー</h3>
-            {confirmedShifts[selectedDate]?.length > 0 ? (
-              <div style={{ display: 'grid', gap: '10px' }}>
-                {confirmedShifts[selectedDate].map((shift, i) => {
-                  const isMe = shift.name === currentUser.name;
-                  return (
-                    <div key={i} style={{ backgroundColor: isMe ? '#fff7e6' : '#f9f9f9', border: isMe ? '1px solid #ffd591' : '1px solid #eee', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 'bold', color: '#333' }}>{shift.name} {isMe && "(自分)"}</span>
-                      <span style={{ color: isMe ? '#d46b08' : '#1890ff', fontWeight: 'bold', fontSize: '14px', background: isMe ? '#fff' : '#e6f7ff', padding:'2px 8px', borderRadius:'4px' }}>{shift.start} 〜 {shift.end}</span>
+          <div style={{ display: 'grid', gap: '15px' }}>
+            {/* 出勤メンバー */}
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '15px', border: '1px solid #eee', boxShadow: '0 2px 5px rgba(0,0,0,0.03)' }}>
+              <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', color: '#333', fontWeight:'bold', borderLeft: '4px solid #1890ff', paddingLeft: '10px' }}>{selectedDate} の出勤メンバー</h3>
+              {confirmedShifts[selectedDate]?.length > 0 ? (
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {confirmedShifts[selectedDate].map((shift, i) => {
+                    const isMe = shift.name === currentUser.name;
+                    return (
+                      <div key={i} style={{ backgroundColor: isMe ? '#fff7e6' : '#f9f9f9', border: isMe ? '1px solid #ffd591' : '1px solid #eee', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontWeight: 'bold', color: '#333' }}>{shift.name} {isMe && "(自分)"}</span>
+                        <span style={{ color: isMe ? '#d46b08' : '#1890ff', fontWeight: 'bold', fontSize: '14px', background: isMe ? '#fff' : '#e6f7ff', padding:'2px 8px', borderRadius:'4px' }}>{shift.start} 〜 {shift.end}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <p style={{ color: '#999', textAlign: 'center', fontSize: '14px' }}>シフトはありません</p>}
+            </div>
+
+            {/* 予約情報 */}
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '15px', border: '1px solid #eee', boxShadow: '0 2px 5px rgba(0,0,0,0.03)' }}>
+              <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', color: '#333', fontWeight:'bold', borderLeft: '4px solid #52c41a', paddingLeft: '10px' }}>{selectedDate} の予約</h3>
+              {reservations[selectedDate]?.length > 0 ? (
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {reservations[selectedDate].map((reservation, i) => (
+                    <div key={i} style={{ backgroundColor: '#f6ffed', border: '1px solid #b7eb8f', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <span style={{ fontWeight: 'bold', color: '#333', display: 'block' }}>{reservation.name} 様</span>
+                        <span style={{ fontSize: '12px', color: '#888' }}>{reservation.count}名</span>
+                      </div>
+                      <span style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '14px', background: '#fff', padding:'4px 10px', borderRadius:'4px' }}>{reservation.time}</span>
                     </div>
-                  );
-                })}
-              </div>
-            ) : <p style={{ color: '#999', textAlign: 'center', fontSize: '14px' }}>シフトはありません</p>}
+                  ))}
+                </div>
+              ) : <p style={{ color: '#999', textAlign: 'center', fontSize: '14px' }}>予約はありません</p>}
+            </div>
           </div>
         ) : <p style={{ color: '#ccc', textAlign: 'center', marginTop: '40px', fontSize: '14px' }}>日付をタップして詳細を確認</p>}
       </div>

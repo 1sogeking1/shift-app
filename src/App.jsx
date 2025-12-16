@@ -9,6 +9,10 @@ import Profile from './Profile';
 import UserList from './UserList';
 import SalaryList from './SalaryList'; // ★追加
 import Timecard from './Timecard';
+import Terms from './Terms';
+import Help from './Help';
+import Privacy from './Privacy';
+import AppDownload from './AppDownload';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -43,8 +47,9 @@ function App() {
   };
 
   const handleMenuClick = (action) => {
-    if (action === 'help') alert("ヘルプ：\n開発中の機能です。");
-    if (action === 'terms') alert("利用規約：\nテスト運用中です。");
+    if (action === 'help') setPage('help');
+    if (action === 'terms') setPage('terms');
+    if (action === 'privacy') setPage('privacy');
     setIsMenuOpen(false);
   };
 
@@ -61,11 +66,16 @@ function App() {
           {page === 'input' && <ShiftInput currentUser={currentUser} />}
           {page === 'reservation' && <ReservationList currentUser={currentUser} />}
           {page === 'timecard' && <Timecard currentUser={currentUser} />}
-          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} />}
-          
+          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={setPage} />}
+
           {page === 'manager' && <ManagerView />}
           {page === 'userlist' && <UserList />}
           {page === 'salary' && <SalaryList />} {/* ★給与画面 */}
+
+          {page === 'terms' && <Terms onBack={() => setPage('profile')} />}
+          {page === 'help' && <Help onBack={() => setPage('profile')} />}
+          {page === 'privacy' && <Privacy onBack={() => setPage('profile')} />}
+          {page === 'appdownload' && <AppDownload onBack={() => setPage('profile')} />}
         </div>
 
         <div style={{ height: '60px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#fff', zIndex: 50, flexShrink: 0 }}>
@@ -99,14 +109,15 @@ function App() {
             {currentUser.isAdmin && (
               <>
                 <MenuItem onClick={() => { setPage('userlist'); setIsMenuOpen(false); }} label="👥 スタッフ管理 (時給)" />
-                {/* ★ここに追加 */}
                 <MenuItem onClick={() => { setPage('salary'); setIsMenuOpen(false); }} label="💰 給与計算・実績" />
+                <MenuItem onClick={() => { setPage('appdownload'); setIsMenuOpen(false); }} label="📱 アプリをダウンロード" />
               </>
             )}
 
             <hr style={{ margin: '10px 0', border: 'none', borderTop: '1px solid #eee' }} />
             <MenuItem onClick={() => handleMenuClick('help')} label="❓ ヘルプ" />
             <MenuItem onClick={() => handleMenuClick('terms')} label="📜 利用規約" />
+            <MenuItem onClick={() => handleMenuClick('privacy')} label="🔒 プライバシーポリシー" />
           </div>
         </div>
       </div>

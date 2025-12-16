@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffa500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="120" fill="url(#grad1)"/>
+
+  <!-- Calendar icon -->
+  <g transform="translate(100, 100)">
+    <!-- Calendar body -->
+    <rect x="20" y="60" width="280" height="240" rx="20" fill="white" stroke="white" stroke-width="2"/>
+
+    <!-- Calendar header -->
+    <rect x="20" y="40" width="280" height="60" rx="20" fill="white" opacity="0.95"/>
+
+    <!-- Calendar rings -->
+    <rect x="80" y="20" width="15" height="40" rx="7" fill="white"/>
+    <rect x="225" y="20" width="15" height="40" rx="7" fill="white"/>
+
+    <!-- Grid lines -->
+    <line x1="60" y1="130" x2="260" y2="130" stroke="#ffa500" stroke-width="3" opacity="0.3"/>
+    <line x1="60" y1="180" x2="260" y2="180" stroke="#ffa500" stroke-width="3" opacity="0.3"/>
+    <line x1="60" y1="230" x2="260" y2="230" stroke="#ffa500" stroke-width="3" opacity="0.3"/>
+
+    <!-- Date dots -->
+    <circle cx="80" cy="155" r="8" fill="#ffa500"/>
+    <circle cx="130" cy="155" r="8" fill="#ffa500"/>
+    <circle cx="180" cy="155" r="8" fill="#ffa500"/>
+    <circle cx="230" cy="155" r="8" fill="#ffa500"/>
+
+    <circle cx="80" cy="205" r="8" fill="#ffa500"/>
+    <circle cx="130" cy="205" r="8" fill="#ffa500"/>
+    <circle cx="180" cy="205" r="8" fill="#ffa500"/>
+
+    <!-- Highlight today -->
+    <circle cx="230" cy="205" r="12" fill="#ff8c00"/>
+
+    <!-- Clock -->
+    <circle cx="240" cy="260" r="35" fill="white" stroke="#ffa500" stroke-width="4"/>
+    <line x1="240" y1="260" x2="240" y2="235" stroke="#ffa500" stroke-width="4" stroke-linecap="round"/>
+    <line x1="240" y1="260" x2="255" y2="260" stroke="#ff8c00" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="240" cy="260" r="4" fill="#ffa500"/>
+  </g>
+</svg>

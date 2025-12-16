@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
-function Profile({ currentUser, onLogout }) {
+function Profile({ currentUser, onLogout, onPageChange }) {
   const [wage, setWage] = useState("---");
 
   // 自分の時給を表示する（編集は不可）
@@ -63,7 +63,24 @@ function Profile({ currentUser, onLogout }) {
         </div>
       </div>
 
-      <div style={{ marginTop: '40px', padding: '0 20px' }}>
+      <div style={{ marginTop: '30px', padding: '0 20px' }}>
+        <div style={{ display: 'grid', gap: '10px', marginBottom: '20px' }}>
+          {currentUser.isAdmin && (
+            <button onClick={() => onPageChange('appdownload')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff7e6', color: '#d46b08', border: '1px solid #ffd591', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <span>📱</span> アプリをダウンロード
+            </button>
+          )}
+          <button onClick={() => onPageChange('help')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <span>❓</span> ヘルプ・使い方ガイド
+          </button>
+          <button onClick={() => onPageChange('terms')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <span>📜</span> 利用規約
+          </button>
+          <button onClick={() => onPageChange('privacy')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <span>🔒</span> プライバシーポリシー
+          </button>
+        </div>
+
         <button onClick={onLogout} style={{ width: '100%', padding: '15px', backgroundColor: '#ff4d4f', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', fontSize: '16px', boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)', cursor: 'pointer' }}>
           ログアウト
         </button>
