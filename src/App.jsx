@@ -17,6 +17,7 @@ import AppDownload from './AppDownload';
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [page, setPage] = useState('home');
+  const [pageHistory, setPageHistory] = useState(['home']);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -46,10 +47,25 @@ function App() {
     }
   };
 
+  const navigateTo = (newPage) => {
+    setPageHistory(prev => [...prev, newPage]);
+    setPage(newPage);
+  };
+
+  const navigateBack = () => {
+    if (pageHistory.length > 1) {
+      const newHistory = [...pageHistory];
+      newHistory.pop(); // 現在のページを削除
+      const previousPage = newHistory[newHistory.length - 1];
+      setPageHistory(newHistory);
+      setPage(previousPage);
+    }
+  };
+
   const handleMenuClick = (action) => {
-    if (action === 'help') setPage('help');
-    if (action === 'terms') setPage('terms');
-    if (action === 'privacy') setPage('privacy');
+    if (action === 'help') navigateTo('help');
+    if (action === 'terms') navigateTo('terms');
+    if (action === 'privacy') navigateTo('privacy');
     setIsMenuOpen(false);
   };
 
@@ -64,16 +80,16 @@ function App() {
           {page === 'input' && <ShiftInput currentUser={currentUser} />}
           {page === 'reservation' && <ReservationList currentUser={currentUser} />}
           {page === 'timecard' && <Timecard currentUser={currentUser} />}
-          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={setPage} />}
+          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={navigateTo} />}
 
           {page === 'manager' && <ManagerView />}
           {page === 'userlist' && <UserList />}
           {page === 'salary' && <SalaryList />} {/* ★給与画面 */}
 
-          {page === 'terms' && <Terms onBack={() => setPage('profile')} />}
-          {page === 'help' && <Help onBack={() => setPage('profile')} />}
-          {page === 'privacy' && <Privacy onBack={() => setPage('profile')} />}
-          {page === 'appdownload' && <AppDownload onBack={() => setPage('profile')} />}
+          {page === 'terms' && <Terms onBack={navigateBack} />}
+          {page === 'help' && <Help onBack={navigateBack} />}
+          {page === 'privacy' && <Privacy onBack={navigateBack} />}
+          {page === 'appdownload' && <AppDownload onBack={navigateBack} />}
         </div>
 
         <div className="bottom-nav">
@@ -105,9 +121,9 @@ function App() {
             {/* 店長メニュー */}
             {currentUser.isAdmin && (
               <>
-                <MenuItem onClick={() => { setPage('userlist'); setIsMenuOpen(false); }} label="👥 スタッフ管理 (時給)" />
-                <MenuItem onClick={() => { setPage('salary'); setIsMenuOpen(false); }} label="💰 給与計算・実績" />
-                <MenuItem onClick={() => { setPage('appdownload'); setIsMenuOpen(false); }} label="📱 アプリをダウンロード" />
+                <MenuItem onClick={() => { navigateTo('userlist'); setIsMenuOpen(false); }} label="👥 スタッフ管理 (時給)" />
+                <MenuItem onClick={() => { navigateTo('salary'); setIsMenuOpen(false); }} label="💰 給与計算・実績" />
+                <MenuItem onClick={() => { navigateTo('appdownload'); setIsMenuOpen(false); }} label="📱 アプリをダウンロード" />
               </>
             )}
 

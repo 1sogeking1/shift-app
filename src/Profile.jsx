@@ -64,24 +64,15 @@ function Profile({ currentUser, onLogout, onPageChange }) {
       </div>
 
       <div style={{ marginTop: '30px', padding: '0 20px' }}>
-        <div style={{ display: 'grid', gap: '10px', marginBottom: '20px' }}>
-          {currentUser.isAdmin && (
-            <button onClick={() => onPageChange('appdownload')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff7e6', color: '#d46b08', border: '1px solid #ffd591', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span>📱</span> アプリをダウンロード
+        {currentUser.isAdmin && (
+          <div style={{ marginBottom: '20px' }}>
+            <button onClick={() => onPageChange('appdownload')} style={{ width: '100%', padding: '14px', backgroundColor: '#fff7e6', color: '#d46b08', border: '1px solid #ffd591', borderRadius: '12px', fontWeight: 'bold', fontSize: '15px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 2px 8px rgba(255, 165, 0, 0.15)' }}>
+              <span style={{ fontSize: '20px' }}>📱</span> アプリをダウンロード
             </button>
-          )}
-          <button onClick={() => onPageChange('help')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <span>❓</span> ヘルプ・使い方ガイド
-          </button>
-          <button onClick={() => onPageChange('terms')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <span>📜</span> 利用規約
-          </button>
-          <button onClick={() => onPageChange('privacy')} style={{ width: '100%', padding: '12px', backgroundColor: '#fff', color: '#333', border: '1px solid #ddd', borderRadius: '8px', fontWeight: 'normal', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <span>🔒</span> プライバシーポリシー
-          </button>
-        </div>
+          </div>
+        )}
 
-        <button onClick={onLogout} style={{ width: '100%', padding: '15px', backgroundColor: '#ff4d4f', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', fontSize: '16px', boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)', cursor: 'pointer' }}>
+        <button onClick={onLogout} style={{ width: '100%', padding: '16px', backgroundColor: '#ff4d4f', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', fontSize: '16px', boxShadow: '0 4px 12px rgba(255, 77, 79, 0.3)', cursor: 'pointer' }}>
           ログアウト
         </button>
       </div>

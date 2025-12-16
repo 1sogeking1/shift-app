@@ -123,9 +123,15 @@ function HomeCalendar({ currentUser, onMenuClick }) {
   }, [confirmedShifts, hourlyWage, viewMonth, viewYear]);
 
   return (
-    <div style={{ padding: '20px', width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '20px', position: 'relative' }}>
-        <button onClick={onMenuClick} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#555', fontSize: '24px', cursor: 'pointer', padding: 0 }}>≡</button>
+    <div style={{ padding: '20px 16px', width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
+      {/* ヘッダー with ロゴ */}
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: '12px' }}>
+        <button onClick={onMenuClick} style={{ background: 'none', border: 'none', color: '#555', fontSize: '28px', cursor: 'pointer', padding: '4px' }}>≡</button>
+        <img src="/logo.svg" alt="J" style={{ height: '32px', marginRight: 'auto' }} />
+      </div>
+
+      {/* 年月切り替え */}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '20px' }}>
         <button onClick={() => changeMonth(-1)} style={navButtonStyle}>＜</button>
         <h2 style={{ margin: 0, fontSize: '18px', color: '#333', fontWeight: 'bold' }}>{viewYear}年 {viewMonth}月</h2>
         <button onClick={() => changeMonth(1)} style={navButtonStyle}>＞</button>

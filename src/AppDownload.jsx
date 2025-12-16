@@ -66,7 +66,7 @@ function AppDownload({ onBack }) {
             ←
           </button>
         )}
-        <h2 style={{ flex: 1, textAlign: 'center', color: '#333', fontSize: '20px', margin: '0', fontWeight: 'bold' }}>アプリをダウンロード</h2>
+        <h2 style={{ flex: 1, textAlign: 'center', color: '#333', fontSize: '20px', margin: '0', fontWeight: 'bold' }}>J をインストール</h2>
         <div style={{ width: '24px' }}></div>
       </div>
 
