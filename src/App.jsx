@@ -7,8 +7,9 @@ import ManagerView from './ManagerView';
 import ReservationList from './ReservationList';
 import Profile from './Profile';
 import UserList from './UserList';
-import SalaryList from './SalaryList'; // ★追加
+import SalaryList from './SalaryList';
 import Timecard from './Timecard';
+import Notifications from './Notifications';
 import Terms from './Terms';
 import Help from './Help';
 import Privacy from './Privacy';
@@ -76,15 +77,16 @@ function App() {
   return (
     <div className="app-container">
         <div className="app-content">
-          {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
-          {page === 'input' && <ShiftInput currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
-          {page === 'reservation' && <ReservationList currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
-          {page === 'timecard' && <Timecard currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
-          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={navigateTo} onMenuClick={() => setIsMenuOpen(true)} />}
+          {page === 'home' && <HomeCalendar currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} onNotificationClick={() => navigateTo('notifications')} />}
+          {page === 'input' && <ShiftInput currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} onNotificationClick={() => navigateTo('notifications')} />}
+          {page === 'reservation' && <ReservationList currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} onNotificationClick={() => navigateTo('notifications')} />}
+          {page === 'timecard' && <Timecard currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} onNotificationClick={() => navigateTo('notifications')} />}
+          {page === 'profile' && <Profile currentUser={currentUser} onLogout={handleLogout} onPageChange={navigateTo} onMenuClick={() => setIsMenuOpen(true)} onNotificationClick={() => navigateTo('notifications')} />}
+          {page === 'notifications' && <Notifications currentUser={currentUser} onMenuClick={() => setIsMenuOpen(true)} />}
 
           {page === 'manager' && <ManagerView />}
           {page === 'userlist' && <UserList />}
-          {page === 'salary' && <SalaryList />} {/* ★給与画面 */}
+          {page === 'salary' && <SalaryList />}
 
           {page === 'terms' && <Terms onBack={navigateBack} />}
           {page === 'help' && <Help onBack={navigateBack} />}

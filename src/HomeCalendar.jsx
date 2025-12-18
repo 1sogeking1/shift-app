@@ -4,7 +4,7 @@ import { db } from "./firebase";
 import AppHeader from './AppHeader';
 // Timecardのimportを削除
 
-function HomeCalendar({ currentUser, onMenuClick }) {
+function HomeCalendar({ currentUser, onMenuClick, onNotificationClick }) {
   const [confirmedShifts, setConfirmedShifts] = useState({});
   const [reservations, setReservations] = useState({});
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
@@ -125,7 +125,7 @@ function HomeCalendar({ currentUser, onMenuClick }) {
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <AppHeader onMenuClick={onMenuClick} pageName="ホーム" />
+      <AppHeader onMenuClick={onMenuClick} pageName="ホーム" currentUser={currentUser} onNotificationClick={onNotificationClick} />
 
       <div style={{ padding: '20px 16px', paddingTop: '90px' }}>
 

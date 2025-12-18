@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 function UserList() {
@@ -41,6 +41,27 @@ function UserList() {
     }
   };
 
+  // ★削除処理
+  const handleDelete = async (id, userName, isAdmin) => {
+    if (isAdmin) {
+      alert("管理者アカウントは削除できません");
+      return;
+    }
+
+    if (!window.confirm(`${userName} さんのアカウントを完全に削除しますか？\n\nこの操作は取り消せません。\n関連するシフトや勤怠データも削除されます。`)) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, "users", id));
+      alert("削除しました");
+      fetchUsers(); // リストを再読み込み
+    } catch (error) {
+      console.error("削除エラー:", error);
+      alert("削除に失敗しました");
+    }
+  };
+
   return (
     <div style={{ padding: '20px 10px', maxWidth: '1000px', margin: '0 auto', fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
       <h2 style={{ textAlign: 'center', color: '#333', fontSize: '18px', marginBottom: '20px', fontWeight: 'bold' }}>👥 スタッフ管理・時給設定</h2>
@@ -67,29 +88,46 @@ function UserList() {
               </div>
             </div>
 
-            {/* 右側：時給入力と保存ボタン */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* 右側：時給入力、保存ボタン、削除ボタン */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '10px', color: '#888', display: 'block' }}>時給</span>
-                <input 
-                  type="number" 
-                  value={user.hourlyWage || ''} 
+                <input
+                  type="number"
+                  value={user.hourlyWage || ''}
                   onChange={(e) => handleWageChange(user.id, e.target.value)}
                   placeholder="未設定"
-                  style={{ 
-                    width: '70px', padding: '5px', borderRadius: '4px', border: '1px solid #ddd', 
-                    textAlign: 'right', fontSize: '16px' 
+                  style={{
+                    width: '70px', padding: '5px', borderRadius: '4px', border: '1px solid #ddd',
+                    textAlign: 'right', fontSize: '16px'
                   }}
                 />
               </div>
-              <button 
+              <button
                 onClick={() => handleSave(user.id, user.hourlyWage)}
-                style={{ 
-                  backgroundColor: '#007bff', color: '#fff', border: 'none', 
+                style={{
+                  backgroundColor: '#007bff', color: '#fff', border: 'none',
                   borderRadius: '6px', padding: '8px 12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px'
                 }}
               >
                 保存
+              </button>
+              <button
+                onClick={() => handleDelete(user.id, user.name, user.isAdmin)}
+                style={{
+                  backgroundColor: user.isAdmin ? '#eee' : '#fff0f0',
+                  color: user.isAdmin ? '#999' : '#ff4d4f',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '8px 10px',
+                  cursor: user.isAdmin ? 'not-allowed' : 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '12px',
+                  opacity: user.isAdmin ? 0.5 : 1
+                }}
+                disabled={user.isAdmin}
+              >
+                削除
               </button>
             </div>
           </div>

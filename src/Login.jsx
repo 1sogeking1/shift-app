@@ -104,58 +104,84 @@ function Login({ onLogin }) {
 
       {/* --- 1. プロフィール選択画面 --- */}
       {mode === 'select' && (
-        <div style={{ width: '100%', maxWidth: '600px', padding: '20px' }}>
-          <h2 style={{ fontSize: '18px', color: '#555', textAlign: 'center', marginBottom: '30px', fontWeight:'normal' }}>
+        <div style={{ width: '100%', maxWidth: '800px', padding: '20px', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+          <h2 style={{ fontSize: '18px', color: '#555', textAlign: 'center', marginBottom: '20px', fontWeight:'normal' }}>
             アカウントを選択してください
           </h2>
-          
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '25px' }}>
-            {users.map((user) => (
-              <div 
-                key={user.id} 
-                onClick={() => handleProfileClick(user)}
-                style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '80px' }}
-                className="profile-item"
-              >
-                {/* ★丸いアイコンに変更 */}
-                <div style={{ 
-                  width: '70px', height: '70px', 
-                  backgroundColor: user.avatarColor || '#ccc', 
-                  borderRadius: '50%', // 円形
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '28px', fontWeight: 'bold', color: '#fff',
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-                  transition: 'transform 0.2s',
-                  marginBottom: '10px'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  {user.isAdmin ? "👑" : user.name.charAt(0)}
-                </div>
-                <div style={{ color: '#333', fontSize: '13px', fontWeight: 'bold', textAlign:'center', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', width:'100%' }}>
-                  {user.name}
-                </div>
-              </div>
-            ))}
 
-            {/* 追加ボタン */}
-            <div onClick={() => setMode('add')} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '80px' }}>
-              <div style={{ 
-                width: '70px', height: '70px', 
-                backgroundColor: '#fff', borderRadius: '50%', 
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '30px', color: '#ccc',
-                border: '2px dashed #ccc', boxSizing: 'border-box'
-              }}>
-                +
+          {/* スクロール可能なコンテナ */}
+          <div style={{
+            overflowY: 'auto',
+            flex: 1,
+            padding: '10px',
+            borderRadius: '12px',
+            backgroundColor: '#fff',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+          }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))',
+              gap: '20px',
+              justifyItems: 'center',
+              padding: '10px'
+            }}>
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  onClick={() => handleProfileClick(user)}
+                  style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90px' }}
+                  className="profile-item"
+                >
+                  <div style={{
+                    width: '70px', height: '70px',
+                    backgroundColor: user.avatarColor || '#ccc',
+                    borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '28px', fontWeight: 'bold', color: '#fff',
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                    transition: 'transform 0.2s',
+                    marginBottom: '8px'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    {user.isAdmin ? "👑" : user.name.charAt(0)}
+                  </div>
+                  <div style={{
+                    color: '#333',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textAlign:'center',
+                    overflow:'hidden',
+                    textOverflow:'ellipsis',
+                    whiteSpace:'nowrap',
+                    width:'100%',
+                    lineHeight: '1.2'
+                  }}>
+                    {user.name}
+                  </div>
+                </div>
+              ))}
+
+              {/* 追加ボタン */}
+              <div onClick={() => setMode('add')} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90px' }}>
+                <div style={{
+                  width: '70px', height: '70px',
+                  backgroundColor: '#fff', borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '30px', color: '#ccc',
+                  border: '2px dashed #ccc', boxSizing: 'border-box',
+                  marginBottom: '8px'
+                }}>
+                  +
+                </div>
+                <div style={{ color: '#888', fontSize: '11px', textAlign: 'center' }}>新規追加</div>
               </div>
-              <div style={{ marginTop: '10px', color: '#888', fontSize: '12px' }}>新規追加</div>
             </div>
           </div>
 
           {/* 店長ログインへのリンク */}
-          <div style={{ marginTop: '50px', textAlign: 'center' }}>
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <button onClick={() => setMode('manager')} style={{ background: 'none', border: 'none', color: '#999', fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}>
               管理者ログインはこちら
             </button>

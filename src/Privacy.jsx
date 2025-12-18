@@ -22,6 +22,7 @@ function Privacy({ onBack }) {
             <li><strong>勤務情報：</strong>シフト希望、確定シフト、勤怠打刻記録</li>
             <li><strong>給与情報：</strong>時給、労働時間、給与計算結果</li>
             <li><strong>位置情報：</strong>勤怠打刻時のGPS位置データ</li>
+            <li><strong>通知情報：</strong>通知の送信日時、既読・未読状態</li>
             <li><strong>その他：</strong>予約情報、早出・残業理由などの入力データ</li>
           </ul>
         </Section>
@@ -32,6 +33,7 @@ function Privacy({ onBack }) {
             <li>シフト管理および勤怠管理</li>
             <li>給与計算および労務管理</li>
             <li>本アプリの機能提供および改善</li>
+            <li>シフト確定・変更等の重要な業務連絡の通知送信</li>
             <li>不正利用の防止およびセキュリティ確保</li>
             <li>利用者からの問い合わせ対応</li>
           </ul>
@@ -49,7 +51,21 @@ function Privacy({ onBack }) {
           </ul>
         </Section>
 
-        <Section title="4. 個人情報の第三者提供">
+        <Section title="4. 通知機能について">
+          <p>本アプリは、シフト管理に関する重要な情報を利用者に通知する機能を提供します。</p>
+          <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
+            <li><strong>通知の内容：</strong>シフトの確定・変更、勤怠に関する連絡、店舗からの業務連絡など</li>
+            <li><strong>通知方法：</strong>アプリ内通知として表示されます（プッシュ通知は使用しません）</li>
+            <li><strong>通知データの保存：</strong>通知内容、送信日時、既読・未読状態がデータベースに保存されます</li>
+            <li><strong>通知の管理：</strong>利用者は、アプリ内で通知の確認・削除を自由に行うことができます</li>
+            <li><strong>第三者提供：</strong>通知情報が第三者に提供されることはありません</li>
+          </ul>
+          <p style={{ marginTop: '10px', color: '#666', fontSize: '13px' }}>
+            ※ 通知は業務連絡の一環として送信されます。シフト確定等の重要な通知は業務上必要なため、受信拒否はできません。
+          </p>
+        </Section>
+
+        <Section title="5. 個人情報の第三者提供">
           <p>当社は、以下の場合を除き、利用者の個人情報を第三者に提供することはありません。</p>
           <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
             <li>利用者本人の同意がある場合</li>
@@ -59,7 +75,7 @@ function Privacy({ onBack }) {
           </ul>
         </Section>
 
-        <Section title="5. 個人情報の管理">
+        <Section title="6. 個人情報の管理">
           <p>当社は、個人情報の漏洩、滅失、毀損を防止するため、以下の対策を講じます。</p>
           <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
             <li>Firebase（Google Cloud）の安全なデータベースを使用</li>
@@ -69,12 +85,12 @@ function Privacy({ onBack }) {
           </ul>
         </Section>
 
-        <Section title="6. 個人情報の保存期間">
+        <Section title="7. 個人情報の保存期間">
           <p>個人情報は、利用目的を達成するために必要な期間保存します。退職等により本アプリの利用が終了した場合でも、
           法令で定められた期間（労働基準法に基づく5年間等）は記録を保持することがあります。</p>
         </Section>
 
-        <Section title="7. 個人情報の開示・訂正・削除">
+        <Section title="8. 個人情報の開示・訂正・削除">
           <p>利用者は、自身の個人情報について、以下の権利を有します。</p>
           <ul style={{ paddingLeft: '20px', marginTop: '10px' }}>
             <li>開示を請求する権利</li>
@@ -86,27 +102,27 @@ function Privacy({ onBack }) {
           </p>
         </Section>
 
-        <Section title="8. Cookie（クッキー）について">
+        <Section title="9. Cookie（クッキー）について">
           <p>本アプリでは、利用者の利便性向上のため、ブラウザのローカルストレージを使用してログイン情報を保存します。
           これにより、再訪問時に自動ログインが可能になります。ローカルストレージを削除すると、再度ログインが必要になります。</p>
         </Section>
 
-        <Section title="9. SSL（暗号化通信）について">
+        <Section title="10. SSL（暗号化通信）について">
           <p>本アプリは、個人情報の送受信時にSSL（Secure Socket Layer）による暗号化通信を使用しています。
           これにより、第三者による情報の盗聴や改ざんを防止しています。</p>
         </Section>
 
-        <Section title="10. 未成年者の個人情報について">
+        <Section title="11. 未成年者の個人情報について">
           <p>未成年者が本アプリを利用する場合、保護者の同意を得た上で利用してください。
           未成年者の個人情報についても、本ポリシーに従って適切に管理します。</p>
         </Section>
 
-        <Section title="11. プライバシーポリシーの変更">
+        <Section title="12. プライバシーポリシーの変更">
           <p>当社は、法令の変更や本アプリの機能追加等に伴い、本プライバシーポリシーを変更することがあります。
           変更後のポリシーは、本アプリ上に掲示した時点で効力を生じます。</p>
         </Section>
 
-        <Section title="12. お問い合わせ">
+        <Section title="13. お問い合わせ">
           <p>個人情報の取り扱いに関するお問い合わせは、店舗管理者までご連絡ください。</p>
         </Section>
 
@@ -122,7 +138,7 @@ function Privacy({ onBack }) {
 
         <p style={{ marginTop: '40px', textAlign: 'right', fontSize: '13px', color: '#999' }}>
           制定日：2024年12月1日<br />
-          最終更新：2025年12月16日
+          最終更新：2025年12月17日
         </p>
       </div>
     </div>

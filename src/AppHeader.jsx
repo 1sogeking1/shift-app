@@ -1,4 +1,27 @@
-function AppHeader({ onMenuClick, pageName }) {
+import { useState, useEffect } from 'react';
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase";
+
+function AppHeader({ onMenuClick, pageName, currentUser, onNotificationClick }) {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!currentUser?.id) return;
+
+    // リアルタイムで未読通知数を監視
+    const q = query(
+      collection(db, "notifications"),
+      where("userId", "==", currentUser.id),
+      where("read", "==", false)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setUnreadCount(snapshot.size);
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
   return (
     <div style={{
       position: 'fixed',
@@ -48,6 +71,46 @@ function AppHeader({ onMenuClick, pageName }) {
           <span>{pageName}</span>
         </div>
       </div>
+
+      {/* 通知アイコン */}
+      {currentUser && onNotificationClick && (
+        <button onClick={onNotificationClick} style={{
+          background: 'none',
+          border: 'none',
+          fontSize: '24px',
+          cursor: 'pointer',
+          padding: '8px',
+          minWidth: '48px',
+          minHeight: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative'
+        }}>
+          🔔
+          {unreadCount > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: '5px',
+              right: '5px',
+              backgroundColor: '#ff4d4f',
+              color: '#fff',
+              borderRadius: '10px',
+              padding: '2px 6px',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              minWidth: '18px',
+              height: '18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+            }}>
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
+        </button>
+      )}
     </div>
   );
 }

@@ -94,6 +94,8 @@ function ManagerView() {
     if (!selectedDate) return;
     const targetDateData = calendarMap[selectedDate];
     const updates = {};
+    const affectedUsers = new Set(); // 通知を送るユーザーIDを記録
+
     targetDateData.applicants.forEach(app => {
       const isRejected = rejectedShifts[app.submissionId];
       let newStart = editingShifts[`${app.submissionId}_start`] !== undefined ? editingShifts[`${app.submissionId}_start`] : app.fixStart;
@@ -102,18 +104,34 @@ function ManagerView() {
       if (!updates[app.submissionId]) {
         const originalSub = submissions.find(s => s.id === app.submissionId);
         updates[app.submissionId] = [...originalSub.data];
+        affectedUsers.add(originalSub.userId); // ユーザーIDを記録
       }
       updates[app.submissionId][app.dayIndex] = {
         ...updates[app.submissionId][app.dayIndex],
         fixStart: newStart, fixEnd: newEnd, start: newStart, end: newEnd
       };
     });
+
     try {
       const promises = Object.keys(updates).map(subId => {
         const shiftRef = doc(db, "shifts", subId);
-        return updateDoc(shiftRef, { data: updates[subId], status: "confirmed" }); // ステータスをconfirmedに
+        return updateDoc(shiftRef, { data: updates[subId], status: "confirmed" });
       });
       await Promise.all(promises);
+
+      // ★全員に通知を送信
+      const notificationPromises = Array.from(affectedUsers).map(userId => {
+        return addDoc(collection(db, "notifications"), {
+          userId: userId,
+          title: "シフトが確定しました",
+          message: `${selectedDate}のシフトが管理者によって確定されました。ホーム画面で確認してください。`,
+          type: "shift_confirmed",
+          read: false,
+          createdAt: new Date()
+        });
+      });
+      await Promise.all(notificationPromises);
+
       alert("保存しました！");
       setEditingShifts({}); setRejectedShifts({}); setSelectedDate(null); fetchData();
     } catch (error) { alert("エラーが発生しました"); }

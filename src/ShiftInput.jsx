@@ -3,7 +3,7 @@ import { collection, addDoc, query, where, getDocs, doc, setDoc } from "firebase
 import { db } from "./firebase";
 import AppHeader from './AppHeader';
 
-function ShiftInput({ currentUser, onMenuClick }) {
+function ShiftInput({ currentUser, onMenuClick, onNotificationClick }) {
   const [shiftRequests, setShiftRequests] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,7 +106,7 @@ function ShiftInput({ currentUser, onMenuClick }) {
 
   return (
     <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <AppHeader onMenuClick={onMenuClick} pageName="申請" />
+      <AppHeader onMenuClick={onMenuClick} pageName="申請" currentUser={currentUser} onNotificationClick={onNotificationClick} />
 
       <div style={{ padding: '20px 16px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
         {/* サブヘッダー */}

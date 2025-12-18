@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import AppHeader from './AppHeader';
 
-function Profile({ currentUser, onLogout, onPageChange, onMenuClick }) {
+function Profile({ currentUser, onLogout, onPageChange, onMenuClick, onNotificationClick }) {
   const [wage, setWage] = useState("---");
 
   // 自分の時給を表示する（編集は不可）
@@ -26,7 +26,7 @@ function Profile({ currentUser, onLogout, onPageChange, onMenuClick }) {
 
   return (
     <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <AppHeader onMenuClick={onMenuClick} pageName="設定" />
+      <AppHeader onMenuClick={onMenuClick} pageName="設定" currentUser={currentUser} onNotificationClick={onNotificationClick} />
 
       <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 

@@ -3,7 +3,7 @@ import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimest
 import { db } from "./firebase";
 import AppHeader from './AppHeader';
 
-function Timecard({ currentUser, onMenuClick }) {
+function Timecard({ currentUser, onMenuClick, onNotificationClick }) {
   const [status, setStatus] = useState("loading");
   const [docId, setDocId] = useState(null);
   const [startTime, setStartTime] = useState("");
@@ -222,7 +222,7 @@ function Timecard({ currentUser, onMenuClick }) {
 
   return (
     <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <AppHeader onMenuClick={onMenuClick} pageName="打刻" />
+      <AppHeader onMenuClick={onMenuClick} pageName="打刻" currentUser={currentUser} onNotificationClick={onNotificationClick} />
 
       <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 

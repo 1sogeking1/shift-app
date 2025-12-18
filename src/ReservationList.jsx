@@ -3,7 +3,7 @@ import { collection, getDocs, addDoc, deleteDoc, doc, query, where } from "fireb
 import { db } from "./firebase";
 import AppHeader from './AppHeader';
 
-function ReservationList({ currentUser, onMenuClick }) {
+function ReservationList({ currentUser, onMenuClick, onNotificationClick }) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [reservations, setReservations] = useState([]);
   
@@ -64,7 +64,7 @@ function ReservationList({ currentUser, onMenuClick }) {
   // ★統一されたコンテナスタイル
   return (
     <div style={{ fontFamily: '"Helvetica Neue", Arial, sans-serif' }}>
-      <AppHeader onMenuClick={onMenuClick} pageName="予約" />
+      <AppHeader onMenuClick={onMenuClick} pageName="予約" currentUser={currentUser} onNotificationClick={onNotificationClick} />
 
       <div style={{ padding: '20px 10px', paddingTop: '90px', maxWidth: '1000px', margin: '0 auto' }}>
 
